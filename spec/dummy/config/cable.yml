@@ -1,0 +1,5 @@
+development:
+  adapter: bunny
+
+test:
+  adapter: bunny
