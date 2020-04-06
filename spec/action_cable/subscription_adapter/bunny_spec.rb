@@ -9,7 +9,7 @@ require "active_support/core_ext/hash/indifferent_access"
 
 RSpec.describe ActionCable::SubscriptionAdapter::Bunny do
   WAIT_WHEN_EXPECTING_EVENT = 1
-  WAIT_WHEN_NOT_EXPECTING_EVENT = 0.1
+  WAIT_WHEN_NOT_EXPECTING_EVENT = 1
 
   before :each do
     # logger = double(:logger)
