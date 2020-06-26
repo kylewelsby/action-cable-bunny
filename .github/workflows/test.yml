@@ -20,7 +20,7 @@ jobs:
           - rails6
           - rails50
           - rails51
-          - rails5001
+          # - rails5001
           - rspec4rails5
           - rspec4rails6
     name: Ruby ${{ matrix.ruby }}
