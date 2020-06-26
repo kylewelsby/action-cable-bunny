@@ -23,7 +23,7 @@ jobs:
           # - rails5001
           - rspec4rails5
           - rspec4rails6
-    name: Ruby ${{ matrix.ruby }}
+    name: Ruby ${{ matrix.ruby }} ${{ matrix.gemfile }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v1
