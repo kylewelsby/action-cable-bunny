@@ -37,7 +37,9 @@ RSpec.describe ActionCable::SubscriptionAdapter::Bunny do
 
   def subscribe_as_queue(channel, adapter = @rx_adapter)
     queue = Queue.new
-    callback = ->(data) { queue << data }
+    callback = ->(data) do
+      queue << data #unless queue.closed?
+    end
     subscribed = Concurrent::Event.new
     adapter.subscribe(channel, callback, proc { subscribed.set })
     subscribed.wait(WAIT_WHEN_EXPECTING_EVENT)
@@ -48,6 +50,7 @@ RSpec.describe ActionCable::SubscriptionAdapter::Bunny do
     sleep WAIT_WHEN_NOT_EXPECTING_EVENT
 
     expect(queue).to be_empty
+    queue.close
 
     adapter.unsubscribe(channel, ->(data) {})
   end
