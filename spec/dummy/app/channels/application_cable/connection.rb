@@ -14,13 +14,13 @@ module ApplicationCable
 
     private
 
-    def verify_user
-      user_id = request.params[:user_id] ||
-                request.headers['x-user-id'] ||
-                cookies.signed[:user_id] ||
-                request.session[:user_id]
-      reject_unauthorized_connection unless user_id.present?
-      user_id
-    end
+      def verify_user
+        user_id = request.params[:user_id] ||
+                  request.headers['x-user-id'] ||
+                  cookies.signed[:user_id] ||
+                  request.session[:user_id]
+        reject_unauthorized_connection unless user_id.present?
+        user_id
+      end
   end
 end
