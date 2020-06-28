@@ -1,0 +1,46 @@
+name: Unit Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      rabbitmq:
+        image: rabbitmq
+        ports:
+          - 5672:5672
+    strategy:
+      matrix:
+        ruby: 
+          - 2.5
+          - 2.6
+          - 2.7
+        gemfile:
+          - railsmaster
+          - rails6
+          - rails50
+          - rails51
+          # - rails5001
+          - rspec4rails5
+          - rspec4rails6
+    name: Ruby ${{ matrix.ruby }} ${{ matrix.gemfile }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Configure
+        run: |
+          gem install bundler
+          echo 'gem: --no-document' >> ~/.gemrc
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle install --gemfile gemfiles/${{ matrix.gemfile }}.gemfile
+      - name: Test
+        run: bundle exec rake spec

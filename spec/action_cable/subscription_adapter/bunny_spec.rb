@@ -9,7 +9,7 @@ require "active_support/core_ext/hash/indifferent_access"
 
 RSpec.describe ActionCable::SubscriptionAdapter::Bunny do
   WAIT_WHEN_EXPECTING_EVENT = 1
-  WAIT_WHEN_NOT_EXPECTING_EVENT = 0.1
+  WAIT_WHEN_NOT_EXPECTING_EVENT = 1
 
   before :each do
     # logger = double(:logger)
@@ -18,7 +18,7 @@ RSpec.describe ActionCable::SubscriptionAdapter::Bunny do
     # allow(Rails.logger).to receive(:info)
     stub_const("AMQP_CONFIG", nil)
 
-    cable_config = { adapter: "bunny" }
+    cable_config = {adapter: "bunny"}
     server = ActionCable::Server::Base.new
     server.config.cable = cable_config.with_indifferent_access
     server.config.logger = Logger.new(STDOUT).tap { |l| l.level = Logger::UNKNOWN }
@@ -37,7 +37,10 @@ RSpec.describe ActionCable::SubscriptionAdapter::Bunny do
 
   def subscribe_as_queue(channel, adapter = @rx_adapter)
     queue = Queue.new
-    callback = ->(data) { queue << data }
+    callback =
+      ->(data) do
+        queue << data # unless queue.closed?
+      end
     subscribed = Concurrent::Event.new
     adapter.subscribe(channel, callback, proc { subscribed.set })
     subscribed.wait(WAIT_WHEN_EXPECTING_EVENT)
@@ -48,6 +51,7 @@ RSpec.describe ActionCable::SubscriptionAdapter::Bunny do
     sleep WAIT_WHEN_NOT_EXPECTING_EVENT
 
     expect(queue).to be_empty
+    queue.close
 
     adapter.unsubscribe(channel, ->(data) {})
   end
