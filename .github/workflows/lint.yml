@@ -17,5 +17,19 @@ jobs:
         uses: docker://github/super-linter:v2.2.0
         env:
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_RUBY: true
+          VALIDATE_RUBY: false
           VALIDATE_YAML: true
+          VALIDATE_MARKDOWN: true
+      - name: Install Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+      - name: Bundler
+        run: |
+          gem install bundler
+          echo 'gem: --no-document' >> ~/.gemrc
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Lint Ruby
+        run: |
+          bundle exec standardrb

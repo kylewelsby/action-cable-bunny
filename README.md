@@ -12,7 +12,9 @@ gem 'action-cable-bunny'
 
 And then execute:
 
-    $ bundle
+```bash
+bundle
+```
 
 ## Usage
 
@@ -31,7 +33,7 @@ After checking out the repo, run `bundle install` to install dependencies. Then,
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/kylewelsby/action-cable-bunny. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at [github.com/kylewelsby/action-cable-bunny](https://github.com/kylewelsby/action-cable-bunny). This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## Code of Conduct
 
